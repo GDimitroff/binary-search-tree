@@ -24,4 +24,18 @@ describe('Binary Search Tree', () => {
       new Tree('array of integers');
     }).toThrow('Invalid input');
   });
+
+  it('Should successfully insert new node on correct position', () => {
+    const tree = new Tree([1, 10, 5]);
+    const root = tree.root;
+    tree.insert(0);
+    tree.insert(2);
+    tree.insert(30);
+    tree.insert(25);
+
+    expect(root.left.left.data).toBe(0);
+    expect(root.left.right.data).toBe(2);
+    expect(root.right.right.data).toBe(30);
+    expect(root.right.right.left.data).toBe(25);
+  });
 });

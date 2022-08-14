@@ -28,6 +28,27 @@ class Tree {
 
     return build(sortedArray);
   }
+
+  insert(value) {
+    //TODO: check for duplication when find() method is implemented
+
+    function insertRecursive(root, value) {
+      if (root === null) {
+        root = new TreeNode(value);
+        return root;
+      }
+
+      if (value < root.data) {
+        root.left = insertRecursive(root.left, value);
+      } else {
+        root.right = insertRecursive(root.right, value);
+      }
+
+      return root;
+    }
+
+    this.root = insertRecursive(this.root, value);
+  }
 }
 
 export default Tree;
