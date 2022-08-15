@@ -33,7 +33,7 @@ describe('Binary Search Tree', () => {
     const tree = new Tree([1, 10, 5]);
     expect(() => {
       tree.insert(1);
-    }).toThrow('Node with this value already exist in the tree!');
+    }).toThrow('Node with this value already exist');
   });
 
   it('Should correctly find value in the tree', () => {
@@ -41,5 +41,53 @@ describe('Binary Search Tree', () => {
     expect(tree.find(1).data).toBe(1);
     expect(tree.find(10).data).toBe(10);
     expect(tree.find(19)).toBe(null);
+  });
+
+  it('Should correctly delete node when it is a leaf', () => {
+    const tree = new Tree([20, 30, 40, 50, 60, 70, 80]);
+    expect(tree.find(20).data).toBe(20);
+    expect(tree.find(30).left.data).toBe(20);
+    tree.delete(20);
+    expect(tree.find(20)).toBe(null);
+    expect(tree.find(30).left).toBe(null);
+    expect(tree.find(30).right.data).toBe(40);
+  });
+
+  it('Should correctly delete node when it has single child (Path 1)', () => {
+    const tree = new Tree([20, 30, 40, 50, 60, 70, 80]);
+    tree.delete(20);
+    tree.delete(30);
+    expect(tree.find(40).data).toBe(40);
+    expect(tree.find(40).left).toBe(null);
+    expect(tree.find(40).right).toBe(null);
+    expect(tree.find(50).left.data).toBe(40);
+  });
+
+  it('Should correctly delete node when it has single child (Path 2)', () => {
+    const tree = new Tree([20, 30, 40, 50, 60, 70, 80]);
+    tree.delete(40);
+    tree.delete(30);
+    expect(tree.find(40)).toBe(null);
+    expect(tree.find(30)).toBe(null);
+    expect(tree.find(20).data).toBe(20);
+    expect(tree.find(20).left).toBe(null);
+    expect(tree.find(20).right).toBe(null);
+  });
+
+  it('Should correctly delete node when it has 2 children', () => {
+    const tree = new Tree([20, 30, 40, 50, 60, 70, 80]);
+    const root = tree.root;
+    tree.delete(50);
+    expect(root.data).toBe(40);
+    expect(root.left.data).toBe(30);
+    expect(root.left.left.data).toBe(20);
+    expect(root.left.right).toBe(null);
+  });
+
+  it('Should throw error if no such node exist', () => {
+    const tree = new Tree([20, 30, 40, 50, 60, 70, 80]);
+    expect(() => {
+      tree.delete(100);
+    }).toThrow("Node with this value don't exist");
   });
 });

@@ -29,7 +29,7 @@ class Tree {
 
   insert(value, root = this.root) {
     if (this.find(value)) {
-      throw new Error('Node with this value already exist in the tree!');
+      throw new Error('Node with this value already exist');
     }
 
     if (root == null) {
@@ -45,6 +45,39 @@ class Tree {
 
     return root;
   }
+
+  delete(value, root = this.root) {
+    if (!this.find(value)) {
+      throw new Error("Node with this value don't exist");
+    }
+
+    if (root.data > value) {
+      root.left = this.delete(value, root.left);
+    } else if (root.data < value) {
+      root.right = this.delete(value, root.right);
+    } else {
+      if (root.left === null) {
+        return root.right;
+      } else if (root.right === null) {
+        return root.left;
+      } else {
+        root.data = maxValue(root.left);
+        root.left = this.delete(root.data, root.left);
+      }
+    }
+
+    return root;
+  }
+}
+
+function maxValue(root) {
+  let max = root.data;
+  while (root !== null) {
+    max = root.data;
+    root = root.right;
+  }
+
+  return max;
 }
 
 export default Tree;
