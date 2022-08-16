@@ -80,17 +80,41 @@ class Tree {
 
       if (callback) {
         callback(current);
-      } else {
-        result.push(current.data);
       }
+
+      result.push(current.data);
 
       if (current.left) queue.push(current.left);
       if (current.right) queue.push(current.right);
     }
 
-    if (!callback) {
-      return result;
+    return result;
+  }
+
+  inorder(root, callback) {
+    if (root === null) return null;
+
+    const stack = [];
+    const results = [];
+
+    let current = root;
+    while (current !== null || stack.length > 0) {
+      if (current !== null) {
+        stack.push(current);
+        current = current.left;
+      } else {
+        current = stack.pop();
+
+        if (callback) {
+          callback(current);
+        }
+
+        results.push(current.data);
+        current = current.right;
+      }
     }
+
+    return results;
   }
 }
 

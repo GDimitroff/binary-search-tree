@@ -89,23 +89,43 @@ describe('Binary Search Tree', () => {
     expect(tree.delete(100)).toBe(null);
   });
 
-  it('Should correctly traverse the tree in level order if callback is provided', () => {
+  it('levelOrder should correctly traverse the tree if callback function is provided', () => {
     const tree = new Tree([20, 30, 40, 50, 60, 70, 80]);
     const result = [];
     tree.levelOrder(tree.root, (node) => result.push(node.data));
     expect(result).toStrictEqual([50, 30, 70, 20, 40, 60, 80]);
   });
 
-  it('Should correctly traverse the tree in level order if callback is not provided', () => {
+  it('levelOrder should return array with values if callback function is not provided', () => {
     const tree = new Tree([20, 30, 40, 50, 60, 70, 80]);
     const result = tree.levelOrder(tree.root);
     expect(result).toStrictEqual([50, 30, 70, 20, 40, 60, 80]);
   });
 
-  it('Should return null if tree is empty', () => {
+  it('levelOrder should return null if tree is empty', () => {
     const tree = new Tree([]);
     const result = [];
     tree.levelOrder(tree.root, (node) => result.push(node.data));
+    expect(result).toStrictEqual([]);
+  });
+
+  it('inorder should correctly traverse the tree if callback function is provided', () => {
+    const tree = new Tree([20, 30, 40, 50, 60, 70, 80]);
+    const result = [];
+    tree.inorder(tree.root, (node) => result.push(node.data));
+    expect(result).toStrictEqual([20, 30, 40, 50, 60, 70, 80]);
+  });
+
+  it('inorder should return array with values if callback function is not provided', () => {
+    const tree = new Tree([20, 30, 40, 50, 60, 70, 80]);
+    const result = tree.inorder(tree.root);
+    expect(result).toStrictEqual([20, 30, 40, 50, 60, 70, 80]);
+  });
+
+  it('inorder should return null if tree is empty', () => {
+    const tree = new Tree([]);
+    const result = [];
+    tree.inorder(tree.root, (node) => result.push(node.data));
     expect(result).toStrictEqual([]);
   });
 });
