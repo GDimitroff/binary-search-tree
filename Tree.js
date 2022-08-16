@@ -47,8 +47,8 @@ class Tree {
   }
 
   delete(value, root = this.root) {
-    if (!this.find(value)) {
-      throw new Error("Node with this value don't exist");
+    if (root === null) {
+      return root;
     }
 
     if (root.data > value) {
@@ -67,6 +67,24 @@ class Tree {
     }
 
     return root;
+  }
+
+  levelOrder(root) {
+    if (root == null) return root;
+
+    const queue = [];
+    const result = [];
+
+    queue.push(root);
+    while (queue.length > 0) {
+      let current = queue.shift(root);
+      result.push(current.data);
+
+      if (current.left !== null) queue.push(current.left);
+      if (current.right !== null) queue.push(current.right);
+    }
+
+    return result;
   }
 }
 
