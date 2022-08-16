@@ -1,131 +1,150 @@
 import Tree from './Tree';
 
-describe('Binary Search Tree', () => {
-  it('Should successfully create BST', () => {
-    const firstTree = new Tree([1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 324]);
-    expect(firstTree.root.data).toBe(7);
+let tree;
+beforeEach(() => {
+  tree = new Tree([20, 80, 30, 70, 50, 40, 60]);
+});
 
-    const secondTree = new Tree([1, 2, 3]);
-    expect(secondTree.root.data).toBe(2);
-
-    const thirdTree = new Tree([3, 4]);
-    expect(thirdTree.root.data).toBe(3);
-
-    const fourthTree = new Tree([1]);
-    expect(fourthTree.root.data).toBe(1);
-  });
-
-  it('Should successfully insert new node on correct position', () => {
-    const tree = new Tree([1, 10, 5]);
-    const root = tree.root;
-    tree.insert(0);
-    tree.insert(2);
-    tree.insert(30);
-    tree.insert(25);
-
-    expect(root.left.left.data).toBe(0);
-    expect(root.left.right.data).toBe(2);
-    expect(root.right.right.data).toBe(30);
-    expect(root.right.right.left.data).toBe(25);
-  });
-
-  it('Should throw error if you try to insert a node with duplicate value', () => {
-    const tree = new Tree([1, 10, 5]);
+describe('Building a Binary Search Tree', () => {
+  test('buildTree() throws error if input is invalid', () => {
     expect(() => {
-      tree.insert(1);
-    }).toThrow('Node with this value already exist');
+      new Tree(1);
+    }).toThrow('Please provide valid array as input');
+
+    expect(() => {
+      new Tree([]);
+    }).toThrow('Please provide valid array as input');
   });
 
-  it('Should correctly find value in the tree', () => {
-    const tree = new Tree([1, 10, 5, 8, 234, 10]);
-    expect(tree.find(1).data).toBe(1);
-    expect(tree.find(10).data).toBe(10);
-    expect(tree.find(19)).toBe(null);
+  test('buildTree() removes duplicate values', () => {
+    tree = new Tree([1, 7, 4, 4]);
+    const root = tree.root;
+    expect(root.data).toBe(4);
+    expect(root.left.data).toBe(1);
+    expect(root.right.data).toBe(7);
+    expect(root.left.left).toBe(null);
+    expect(root.right.right).toBe(null);
   });
 
-  it('Should correctly delete node when it is a leaf', () => {
-    const tree = new Tree([20, 30, 40, 50, 60, 70, 80]);
+  test('buildTree() returns level-0 root node', () => {
+    expect(tree.root.data).toBe(50);
+  });
+
+  test('Root node returned by buildTree() has correct left child node', () => {
+    expect(tree.root.left.data).toBe(30);
+  });
+
+  test('Root node returned by buildTree() has correct right child node', () => {
+    expect(tree.root.right.data).toBe(70);
+  });
+});
+
+describe('Finding a node', () => {
+  expect(() => {
+    new Tree([]);
+  }).toThrow('Please provide valid array as input');
+
+  test('find() returns null if no search value was provided', () => {
+    expect(tree.find()).toBe(null);
+  });
+
+  test('find() returns null if the value is not found in the tree', () => {
+    expect(tree.find(100)).toBe(null);
+  });
+
+  test('find() returns the right node', () => {
     expect(tree.find(20).data).toBe(20);
-    expect(tree.find(30).left.data).toBe(20);
-    tree.delete(20);
-    expect(tree.find(20)).toBe(null);
-    expect(tree.find(30).left).toBe(null);
-    expect(tree.find(30).right.data).toBe(40);
+    expect(tree.find(80).data).toBe(80);
+  });
+});
+
+describe('Inserting a node', () => {
+  test('Insert: Not passing in a value results in an error', () => {
+    expect(() => tree.insert()).toThrow('Please specify a value to insert');
   });
 
-  it('Should correctly delete node when it has single child (Path 1)', () => {
-    const tree = new Tree([20, 30, 40, 50, 60, 70, 80]);
+  test('Passing in a duplicate value throws error', () => {
+    expect(() => tree.insert(20)).toThrow('Node with this value already exist');
+  });
+
+  test('Insert inserts node with that value at leaf', () => {
+    tree.insert(5);
+    tree.insert(100);
+
+    expect(tree.inorder()).toStrictEqual([5, 20, 30, 40, 50, 60, 70, 80, 100]);
+
+    expect(tree.levelOrder()).toStrictEqual([
+      50, 30, 70, 20, 40, 60, 80, 5, 100,
+    ]);
+  });
+});
+
+describe('Deleting a node', () => {
+  test('Delete: Not passing in a value results in an error', () => {
+    expect(() => tree.delete()).toThrow('Please specify a value to delete');
+  });
+
+  test('Deleting a node (existing or not) returns the tree root', () => {
+    tree.delete(20);
+    expect(tree.inorder()).toStrictEqual([30, 40, 50, 60, 70, 80]);
+
+    tree.delete(100);
+    expect(tree.inorder()).toStrictEqual([30, 40, 50, 60, 70, 80]);
+  });
+
+  test('Deleting a node which is a leaf of the tree (1)', () => {
+    tree.delete(20);
+    expect(tree.levelOrder()).toStrictEqual([50, 30, 70, 40, 60, 80]);
+  });
+
+  test('Deleting a node which is a leaf of the tree (2)', () => {
+    tree.delete(40);
+    expect(tree.levelOrder()).toStrictEqual([50, 30, 70, 20, 60, 80]);
+  });
+
+  test('Deleting a node which has one child (1)', () => {
     tree.delete(20);
     tree.delete(30);
-    expect(tree.find(40).data).toBe(40);
-    expect(tree.find(40).left).toBe(null);
-    expect(tree.find(40).right).toBe(null);
-    expect(tree.find(50).left.data).toBe(40);
+    expect(tree.levelOrder()).toStrictEqual([50, 40, 70, 60, 80]);
   });
 
-  it('Should correctly delete node when it has single child (Path 2)', () => {
-    const tree = new Tree([20, 30, 40, 50, 60, 70, 80]);
+  test('Deleting a node which has one child (2)', () => {
     tree.delete(40);
     tree.delete(30);
-    expect(tree.find(40)).toBe(null);
-    expect(tree.find(30)).toBe(null);
-    expect(tree.find(20).data).toBe(20);
-    expect(tree.find(20).left).toBe(null);
-    expect(tree.find(20).right).toBe(null);
+    expect(tree.levelOrder()).toStrictEqual([50, 20, 70, 60, 80]);
   });
 
-  it('Should correctly delete node when it has 2 children', () => {
-    const tree = new Tree([20, 30, 40, 50, 60, 70, 80]);
-    const root = tree.root;
+  test('Deleting a node which has two children', () => {
+    tree.delete(70);
+    expect(tree.levelOrder()).toStrictEqual([50, 30, 60, 20, 40, 80]);
+  });
+
+  test('Deleting the root node', () => {
     tree.delete(50);
-    expect(root.data).toBe(40);
-    expect(root.left.data).toBe(30);
-    expect(root.left.left.data).toBe(20);
-    expect(root.left.right).toBe(null);
+    expect(tree.levelOrder()).toStrictEqual([40, 30, 70, 20, 60, 80]);
+  });
+});
+
+describe('levelOrder traversal', () => {
+  test('levelOrder returns array with values if no callback is passed', () => {
+    expect(tree.levelOrder()).toStrictEqual([50, 30, 70, 20, 40, 60, 80]);
   });
 
-  it('Should return null if tree is empty', () => {
-    const tree = new Tree([]);
-    expect(tree.delete(100)).toBe(null);
-  });
-
-  it('levelOrder should correctly traverse the tree if callback function is provided', () => {
-    const tree = new Tree([20, 30, 40, 50, 60, 70, 80]);
+  test('levelOrder calls callback for each item in order', () => {
     const result = [];
-    tree.levelOrder(tree.root, (node) => result.push(node.data));
+    tree.levelOrder((node) => result.push(node.data));
     expect(result).toStrictEqual([50, 30, 70, 20, 40, 60, 80]);
   });
+});
 
-  it('levelOrder should return array with values if callback function is not provided', () => {
-    const tree = new Tree([20, 30, 40, 50, 60, 70, 80]);
-    const result = tree.levelOrder(tree.root);
-    expect(result).toStrictEqual([50, 30, 70, 20, 40, 60, 80]);
+describe('inorder traversal', () => {
+  test('inorder returns array with values if no callback is passed', () => {
+    expect(tree.inorder()).toStrictEqual([20, 30, 40, 50, 60, 70, 80]);
   });
 
-  it('levelOrder should return null if tree is empty', () => {
-    const tree = new Tree([]);
+  test('inorder calls callback for each item in order', () => {
     const result = [];
-    tree.levelOrder(tree.root, (node) => result.push(node.data));
-    expect(result).toStrictEqual([]);
-  });
-
-  it('inorder should correctly traverse the tree if callback function is provided', () => {
-    const tree = new Tree([20, 30, 40, 50, 60, 70, 80]);
-    const result = [];
-    tree.inorder(tree.root, (node) => result.push(node.data));
+    tree.inorder((node) => result.push(node.data));
     expect(result).toStrictEqual([20, 30, 40, 50, 60, 70, 80]);
-  });
-
-  it('inorder should return array with values if callback function is not provided', () => {
-    const tree = new Tree([20, 30, 40, 50, 60, 70, 80]);
-    const result = tree.inorder(tree.root);
-    expect(result).toStrictEqual([20, 30, 40, 50, 60, 70, 80]);
-  });
-
-  it('inorder should return null if tree is empty', () => {
-    const tree = new Tree([]);
-    const result = [];
-    tree.inorder(tree.root, (node) => result.push(node.data));
-    expect(result).toStrictEqual([]);
   });
 });
