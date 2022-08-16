@@ -69,22 +69,28 @@ class Tree {
     return root;
   }
 
-  levelOrder(root) {
-    if (root == null) return root;
+  levelOrder(root, callback) {
+    if (root === null) return null;
 
-    const queue = [];
+    const queue = [root];
     const result = [];
 
-    queue.push(root);
     while (queue.length > 0) {
-      let current = queue.shift(root);
-      result.push(current.data);
+      let current = queue.shift();
 
-      if (current.left !== null) queue.push(current.left);
-      if (current.right !== null) queue.push(current.right);
+      if (callback) {
+        callback(current);
+      } else {
+        result.push(current.data);
+      }
+
+      if (current.left) queue.push(current.left);
+      if (current.right) queue.push(current.right);
     }
 
-    return result;
+    if (!callback) {
+      return result;
+    }
   }
 }
 

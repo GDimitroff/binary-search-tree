@@ -89,7 +89,14 @@ describe('Binary Search Tree', () => {
     expect(tree.delete(100)).toBe(null);
   });
 
-  it('Should correctly traverse the tree in level order', () => {
+  it('Should correctly traverse the tree in level order if callback is provided', () => {
+    const tree = new Tree([20, 30, 40, 50, 60, 70, 80]);
+    const result = [];
+    tree.levelOrder(tree.root, (node) => result.push(node.data));
+    expect(result).toStrictEqual([50, 30, 70, 20, 40, 60, 80]);
+  });
+
+  it('Should correctly traverse the tree in level order if callback is not provided', () => {
     const tree = new Tree([20, 30, 40, 50, 60, 70, 80]);
     const result = tree.levelOrder(tree.root);
     expect(result).toStrictEqual([50, 30, 70, 20, 40, 60, 80]);
@@ -97,7 +104,8 @@ describe('Binary Search Tree', () => {
 
   it('Should return null if tree is empty', () => {
     const tree = new Tree([]);
-    const result = tree.levelOrder(tree.root);
-    expect(result).toBe(null);
+    const result = [];
+    tree.levelOrder(tree.root, (node) => result.push(node.data));
+    expect(result).toStrictEqual([]);
   });
 });
