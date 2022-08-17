@@ -56,9 +56,7 @@ class Tree {
     while (queue.length > 0) {
       let current = queue.shift();
 
-      if (callback) {
-        callback(current);
-      }
+      if (callback) callback(current);
 
       result.push(current.data);
 
@@ -83,9 +81,7 @@ class Tree {
       } else {
         current = stack.pop();
 
-        if (callback) {
-          callback(current);
-        }
+        if (callback) callback(current);
 
         results.push(current.data);
         current = current.right;
@@ -93,6 +89,26 @@ class Tree {
     }
 
     return results;
+  }
+
+  preorder(callback, root = this.root) {
+    if (root === null) return null;
+
+    const stack = [root];
+    const result = [];
+
+    while (stack.length > 0) {
+      let current = stack.pop();
+
+      if (callback) callback(current);
+
+      result.push(current.data);
+
+      if (current.right) stack.push(current.right);
+      if (current.left) stack.push(current.left);
+    }
+
+    return result;
   }
 }
 
