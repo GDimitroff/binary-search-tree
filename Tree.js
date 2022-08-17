@@ -23,14 +23,11 @@ class Tree {
 
   find(value, root = this.root) {
     if (root === null || root.data === value) return root;
-    if (root.data < value) {
-      return this.find(value, root.right);
-    } else {
-      return this.find(value, root.left);
-    }
+    if (root.data < value) return this.find(value, root.right);
+    else return this.find(value, root.left);
   }
 
-  insert(value, root = this.root) {
+  insert(value) {
     if (!value) {
       throw new Error('Please specify a value to insert');
     }
@@ -39,45 +36,15 @@ class Tree {
       throw new Error('Node with this value already exist');
     }
 
-    if (root === null) {
-      root = new TreeNode(value);
-      return root;
-    }
-
-    if (root.data < value) {
-      root.right = this.insert(value, root.right);
-    } else {
-      root.left = this.insert(value, root.left);
-    }
-
-    return root;
+    this.root = insertValue(value, this.root);
   }
 
-  delete(value, root = this.root) {
+  delete(value) {
     if (!value) {
       throw new Error('Please specify a value to delete');
     }
 
-    if (root === null) {
-      return root;
-    }
-
-    if (root.data > value) {
-      root.left = this.delete(value, root.left);
-    } else if (root.data < value) {
-      root.right = this.delete(value, root.right);
-    } else {
-      if (root.left === null) {
-        return root.right;
-      } else if (root.right === null) {
-        return root.left;
-      } else {
-        root.data = maxValue(root.left);
-        root.left = this.delete(root.data, root.left);
-      }
-    }
-
-    return root;
+    this.root = deleteValue(value, this.root);
   }
 
   levelOrder(callback, root = this.root) {
@@ -130,11 +97,45 @@ class Tree {
 }
 
 function parseArray(array) {
-  if (!Array.isArray(array) || array.length < 1) {
-    throw new Error('Please provide valid array as input');
+  if (!Array.isArray(array)) {
+    throw new Error('Please provide an array as input');
   }
 
   return [...new Set(array)].sort((a, b) => a - b);
+}
+
+function insertValue(value, root) {
+  if (root === null) {
+    root = new TreeNode(value);
+    return root;
+  }
+
+  if (root.data < value) {
+    root.right = insertValue(value, root.right);
+  } else {
+    root.left = insertValue(value, root.left);
+  }
+
+  return root;
+}
+
+function deleteValue(value, root) {
+  if (root === null) return root;
+
+  if (value < root.data) root.left = deleteValue(value, root.left);
+  else if (value > root.data) root.right = deleteValue(value, root.right);
+  else {
+    // Node with only one child or no child
+    if (root.left === null) return root.right;
+    else if (root.right === null) return root.left;
+
+    // Node with two children: Get the inorder successor (biggest in the left subtree)
+    root.data = maxValue(root.left);
+    // Delete the inorder successor
+    root.left = deleteValue(root.data, root.left);
+  }
+
+  return root;
 }
 
 function maxValue(root) {

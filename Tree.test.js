@@ -6,14 +6,14 @@ beforeEach(() => {
 });
 
 describe('Building a Binary Search Tree', () => {
-  test('buildTree() throws error if input is invalid', () => {
+  test('buildTree() throws error if input is not array', () => {
     expect(() => {
       new Tree(1);
-    }).toThrow('Please provide valid array as input');
+    }).toThrow('Please provide an array as input');
+  });
 
-    expect(() => {
-      new Tree([]);
-    }).toThrow('Please provide valid array as input');
+  test('buildTree() builds empty root node when provided with empty array', () => {
+    expect(new Tree([]).root).toBe(null);
   });
 
   test('buildTree() removes duplicate values', () => {
@@ -40,10 +40,6 @@ describe('Building a Binary Search Tree', () => {
 });
 
 describe('Finding a node', () => {
-  expect(() => {
-    new Tree([]);
-  }).toThrow('Please provide valid array as input');
-
   test('find() returns null if no search value was provided', () => {
     expect(tree.find()).toBe(null);
   });
@@ -84,12 +80,9 @@ describe('Deleting a node', () => {
     expect(() => tree.delete()).toThrow('Please specify a value to delete');
   });
 
-  test('Deleting a node (existing or not) returns the tree root', () => {
-    tree.delete(20);
-    expect(tree.inorder()).toStrictEqual([30, 40, 50, 60, 70, 80]);
-
+  test('Delete: Attempt to delete not existing node do not affect the tree', () => {
     tree.delete(100);
-    expect(tree.inorder()).toStrictEqual([30, 40, 50, 60, 70, 80]);
+    expect(tree.inorder()).toStrictEqual([20, 30, 40, 50, 60, 70, 80]);
   });
 
   test('Deleting a node which is a leaf of the tree (1)', () => {
@@ -123,6 +116,12 @@ describe('Deleting a node', () => {
     tree.delete(50);
     expect(tree.levelOrder()).toStrictEqual([40, 30, 70, 20, 60, 80]);
   });
+
+  test('Deleting the root node which has no children', () => {
+    tree = new Tree([50]);
+    tree.delete(50);
+    expect(tree.root).toBe(null);
+  });
 });
 
 describe('levelOrder traversal', () => {
@@ -135,6 +134,12 @@ describe('levelOrder traversal', () => {
     tree.levelOrder((node) => result.push(node.data));
     expect(result).toStrictEqual([50, 30, 70, 20, 40, 60, 80]);
   });
+
+  test('levelOrder returns null if tree is empty', () => {
+    tree = new Tree([123]);
+    tree.delete(123);
+    expect(tree.levelOrder()).toBe(null);
+  });
 });
 
 describe('inorder traversal', () => {
@@ -146,5 +151,11 @@ describe('inorder traversal', () => {
     const result = [];
     tree.inorder((node) => result.push(node.data));
     expect(result).toStrictEqual([20, 30, 40, 50, 60, 70, 80]);
+  });
+
+  test('inorder returns null if tree is empty', () => {
+    tree = new Tree([123]);
+    tree.delete(123);
+    expect(tree.inorder()).toBe(null);
   });
 });
