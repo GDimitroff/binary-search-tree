@@ -47,10 +47,10 @@ class Tree {
     this.root = deleteValue(value, this.root);
   }
 
-  levelOrder(callback, root = this.root) {
-    if (root === null) return null;
+  levelOrder(callback) {
+    if (this.root === null) return null;
 
-    const queue = [root];
+    const queue = [this.root];
     const result = [];
 
     while (queue.length > 0) {
@@ -67,13 +67,13 @@ class Tree {
     return result;
   }
 
-  inorder(callback, root = this.root) {
-    if (root === null) return null;
+  inorder(callback) {
+    if (this.root === null) return null;
 
     const stack = [];
     const results = [];
 
-    let current = root;
+    let current = this.root;
     while (current !== null || stack.length > 0) {
       if (current !== null) {
         stack.push(current);
@@ -91,10 +91,10 @@ class Tree {
     return results;
   }
 
-  preorder(callback, root = this.root) {
-    if (root === null) return null;
+  preorder(callback) {
+    if (this.root === null) return null;
 
-    const stack = [root];
+    const stack = [this.root];
     const result = [];
 
     while (stack.length > 0) {
