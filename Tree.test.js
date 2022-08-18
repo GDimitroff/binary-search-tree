@@ -229,3 +229,34 @@ describe('Depth', () => {
     expect(tree.depth(tree.find(100))).toBe(3);
   });
 });
+
+describe('Balancing', () => {
+  test('isBalanced() return true if tree is empty', () => {
+    tree = new Tree([]);
+    expect(tree.isBalanced()).toBe(true);
+  });
+
+  test('isBalanced() returns true if tree is balanced', () => {
+    expect(tree.isBalanced()).toBe(true);
+  });
+
+  test('isBalanced() returns false if tree is unbalanced', () => {
+    tree.insert(100);
+    tree.insert(120);
+    expect(tree.isBalanced()).toBe(false);
+  });
+
+  test('rebalance() returns if tree is empty', () => {
+    tree = new Tree([]);
+    expect(tree.rebalance()).toBeUndefined();
+  });
+
+  test('rebalance() balances unbalanced tree', () => {
+    expect(tree.isBalanced()).toBe(true);
+    tree.insert(100);
+    tree.insert(120);
+    expect(tree.isBalanced()).toBe(false);
+    tree.rebalance();
+    expect(tree.isBalanced()).toBe(true);
+  });
+});

@@ -155,6 +155,30 @@ class Tree {
     else if (node.data < root.data) return this.depth(node, root.left) + 1;
     else return 0;
   }
+
+  isBalanced(root = this.root) {
+    if (root === null) return true;
+
+    const heightDifference = Math.abs(
+      this.height(root.left) - this.height(root.right)
+    );
+
+    if (
+      heightDifference <= 1 &&
+      this.isBalanced(root.left) === true &&
+      this.isBalanced(root.right) === true
+    )
+      return true;
+
+    return false;
+  }
+
+  rebalance() {
+    if (this.root === null) return;
+
+    const inorderList = this.inorder();
+    this.root = this.buildTree(inorderList);
+  }
 }
 
 function parseArray(array) {
