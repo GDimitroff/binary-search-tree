@@ -134,17 +134,26 @@ class Tree {
     if (!callback) return postorderList;
   }
 
-  height(node = this.root) {
-    // If the whole tree is empty return -1
-    if (this.root === null) return -1;
-
-    // Base case. The second check is there if the provided node does not have any children
-    if (node === null || (node.left === null && node.right === null)) return 0;
+  // Height is defined as the number of edges in longest path from a given node to a leaf node
+  // Height of a leaf node is 0
+  height(node) {
+    if (node === null) return -1;
 
     const leftHeight = this.height(node.left);
     const rightHeight = this.height(node.right);
 
     return Math.max(leftHeight, rightHeight) + 1;
+  }
+
+  // The depth of a node total number of edges from the root node to the target node
+  // Depth of root node is 0
+  depth(node, root = this.root) {
+    if (this.root === null) return -1;
+    if (node === this.root) return 0;
+
+    if (node.data > root.data) return this.depth(node, root.right) + 1;
+    else if (node.data < root.data) return this.depth(node, root.left) + 1;
+    else return 0;
   }
 }
 
