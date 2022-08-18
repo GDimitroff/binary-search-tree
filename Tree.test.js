@@ -260,3 +260,9 @@ describe('Balancing', () => {
     expect(tree.isBalanced()).toBe(true);
   });
 });
+
+describe('Pretty Print', () => {
+  test('Pretty Print prints on console', () => {
+    expect(tree.prettyPrint()).toBeUndefined();
+  });
+});

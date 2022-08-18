@@ -179,6 +179,20 @@ class Tree {
     const inorderList = this.inorder();
     this.root = this.buildTree(inorderList);
   }
+
+  prettyPrint(node = this.root, prefix = '', isLeft = true) {
+    if (node.right) {
+      this.prettyPrint(
+        node.right,
+        `${prefix}${isLeft ? '|   ' : '    '}`,
+        false
+      );
+    }
+    console.log(`${prefix}${isLeft ? '└── ' : '┌── '}${node.data}`);
+    if (node.left) {
+      this.prettyPrint(node.left, `${prefix}${isLeft ? '    ' : '|   '}`, true);
+    }
+  }
 }
 
 function parseArray(array) {
