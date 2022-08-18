@@ -37,6 +37,21 @@ class Tree {
     }
 
     this.root = insertValue(value, this.root);
+
+    function insertValue(value, root) {
+      if (root === null) {
+        root = new TreeNode(value);
+        return root;
+      }
+
+      if (root.data < value) {
+        root.right = insertValue(value, root.right);
+      } else {
+        root.left = insertValue(value, root.left);
+      }
+
+      return root;
+    }
   }
 
   delete(value) {
@@ -45,6 +60,25 @@ class Tree {
     }
 
     this.root = deleteValue(value, this.root);
+
+    function deleteValue(value, root) {
+      if (root === null) return root;
+
+      if (value < root.data) root.left = deleteValue(value, root.left);
+      else if (value > root.data) root.right = deleteValue(value, root.right);
+      else {
+        // Node with only one child or no child
+        if (root.left === null) return root.right;
+        else if (root.right === null) return root.left;
+
+        // Node with two children: Get the inorder successor (biggest in the left subtree)
+        root.data = maxValue(root.left);
+        // Delete the inorder successor
+        root.left = deleteValue(root.data, root.left);
+      }
+
+      return root;
+    }
   }
 
   levelOrder(callback) {
@@ -55,60 +89,44 @@ class Tree {
 
     while (queue.length > 0) {
       let current = queue.shift();
-
-      if (callback) callback(current);
-
       result.push(current.data);
 
       if (current.left) queue.push(current.left);
       if (current.right) queue.push(current.right);
-    }
-
-    return result;
-  }
-
-  inorder(callback) {
-    if (this.root === null) return null;
-
-    const stack = [];
-    const results = [];
-
-    let current = this.root;
-    while (current !== null || stack.length > 0) {
-      if (current !== null) {
-        stack.push(current);
-        current = current.left;
-      } else {
-        current = stack.pop();
-
-        if (callback) callback(current);
-
-        results.push(current.data);
-        current = current.right;
-      }
-    }
-
-    return results;
-  }
-
-  preorder(callback) {
-    if (this.root === null) return null;
-
-    const stack = [this.root];
-    const result = [];
-
-    while (stack.length > 0) {
-      let current = stack.pop();
-
       if (callback) callback(current);
-
-      result.push(current.data);
-
-      if (current.right) stack.push(current.right);
-      if (current.left) stack.push(current.left);
     }
 
     return result;
+  }
+
+  inorder(callback, root = this.root, inorderList = []) {
+    if (root === null) return null;
+
+    this.inorder(callback, root.left, inorderList);
+    callback ? callback(root) : inorderList.push(root.data);
+    this.inorder(callback, root.right, inorderList);
+
+    if (!callback) return inorderList;
+  }
+
+  preorder(callback, root = this.root, preorderList = []) {
+    if (root === null) return null;
+
+    callback ? callback(root) : preorderList.push(root.data);
+    this.preorder(callback, root.left, preorderList);
+    this.preorder(callback, root.right, preorderList);
+
+    if (!callback) return preorderList;
+  }
+
+  postorder(callback, root = this.root, postorderList = []) {
+    if (root === null) return null;
+
+    this.postorder(callback, root.left, postorderList);
+    this.postorder(callback, root.right, postorderList);
+    callback ? callback(root) : postorderList.push(root.data);
+
+    if (!callback) return postorderList;
   }
 }
 
@@ -118,40 +136,6 @@ function parseArray(array) {
   }
 
   return [...new Set(array)].sort((a, b) => a - b);
-}
-
-function insertValue(value, root) {
-  if (root === null) {
-    root = new TreeNode(value);
-    return root;
-  }
-
-  if (root.data < value) {
-    root.right = insertValue(value, root.right);
-  } else {
-    root.left = insertValue(value, root.left);
-  }
-
-  return root;
-}
-
-function deleteValue(value, root) {
-  if (root === null) return root;
-
-  if (value < root.data) root.left = deleteValue(value, root.left);
-  else if (value > root.data) root.right = deleteValue(value, root.right);
-  else {
-    // Node with only one child or no child
-    if (root.left === null) return root.right;
-    else if (root.right === null) return root.left;
-
-    // Node with two children: Get the inorder successor (biggest in the left subtree)
-    root.data = maxValue(root.left);
-    // Delete the inorder successor
-    root.left = deleteValue(root.data, root.left);
-  }
-
-  return root;
 }
 
 function maxValue(root) {

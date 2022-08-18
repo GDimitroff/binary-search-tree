@@ -177,3 +177,21 @@ describe('preorder traversal', () => {
     expect(tree.preorder()).toBe(null);
   });
 });
+
+describe('postorder traversal', () => {
+  test('postorder returns array with values if no callback is passed', () => {
+    expect(tree.postorder()).toStrictEqual([20, 40, 30, 60, 80, 70, 50]);
+  });
+
+  test('postorder calls callback for each item in order', () => {
+    const result = [];
+    tree.postorder((node) => result.push(node.data));
+    expect(result).toStrictEqual([20, 40, 30, 60, 80, 70, 50]);
+  });
+
+  test('postorder returns null if tree is empty', () => {
+    tree = new Tree([123]);
+    tree.delete(123);
+    expect(tree.postorder()).toBe(null);
+  });
+});
