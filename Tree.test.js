@@ -195,3 +195,19 @@ describe('postorder traversal', () => {
     expect(tree.postorder()).toBe(null);
   });
 });
+
+describe('Height', () => {
+  test('Height is -1 when the tree is empty', () => {
+    tree = new Tree([]);
+    expect(tree.height()).toBe(-1);
+  });
+
+  test('Height is correct for root node', () => {
+    expect(tree.height(tree.root)).toBe(2);
+  });
+
+  test('Height is correct for node within tree', () => {
+    expect(tree.height(tree.find(70))).toBe(1);
+    expect(tree.height(tree.find(80))).toBe(0);
+  });
+});

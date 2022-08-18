@@ -81,6 +81,8 @@ class Tree {
     }
   }
 
+  // Breadth First Traversal (level by level)
+  // Used Queue : First In, First Out
   levelOrder(callback) {
     if (this.root === null) return null;
 
@@ -96,9 +98,10 @@ class Tree {
       if (callback) callback(current);
     }
 
-    return result;
+    if (!callback) return result;
   }
 
+  // inorder | left root right
   inorder(callback, root = this.root, inorderList = []) {
     if (root === null) return null;
 
@@ -109,6 +112,7 @@ class Tree {
     if (!callback) return inorderList;
   }
 
+  // preorder | root left right
   preorder(callback, root = this.root, preorderList = []) {
     if (root === null) return null;
 
@@ -119,6 +123,7 @@ class Tree {
     if (!callback) return preorderList;
   }
 
+  // postorder | left right root
   postorder(callback, root = this.root, postorderList = []) {
     if (root === null) return null;
 
@@ -127,6 +132,19 @@ class Tree {
     callback ? callback(root) : postorderList.push(root.data);
 
     if (!callback) return postorderList;
+  }
+
+  height(node = this.root) {
+    // If the whole tree is empty return -1
+    if (this.root === null) return -1;
+
+    // Base case. The second check is there if the provided node does not have any children
+    if (node === null || (node.left === null && node.right === null)) return 0;
+
+    const leftHeight = this.height(node.left);
+    const rightHeight = this.height(node.right);
+
+    return Math.max(leftHeight, rightHeight) + 1;
   }
 }
 
@@ -138,6 +156,7 @@ function parseArray(array) {
   return [...new Set(array)].sort((a, b) => a - b);
 }
 
+// Returns the max value in the left subtree needed when deleting a node with two children
 function maxValue(root) {
   let max = root.data;
   while (root !== null) {
